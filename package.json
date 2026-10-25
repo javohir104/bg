@@ -1,0 +1,22 @@
+{
+  "name": "telefon-market-api",
+  "version": "1.0.0",
+  "description": "Telefon Market marketplace API (backend)",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "make-admin": "node src/scripts/makeAdmin.js",
+    "check": "node --check src/index.js && node --check src/routes/products.js && node --check src/routes/orders.js && node --check src/scripts/seedProducts.js && node --check src/routes/auth.js && node --check src/middleware/auth.js",
+    "seed:products": "node src/scripts/seedProducts.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.6.0"
+  }
+}

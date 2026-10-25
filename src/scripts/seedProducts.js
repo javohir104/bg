@@ -1,0 +1,11 @@
+const path=require("path");require("dotenv").config({path:path.join(__dirname,"..","..",".env")});const crypto=require("crypto");const mongoose=require("mongoose");const bcrypt=require("bcryptjs");const {connectDB}=require("../db");const User=require("../models/User");const Product=require("../models/Product");
+const catalog=[
+["Apple iPhone 16 128GB","Apple",11999000,"flagship","A18 chip, 48 MP kamera va Super Retina displey.","photo-1592750475338-74b7b21085ab"],
+["Samsung Galaxy S25 256GB","Samsung",13499000,"flagship","Galaxy AI, AMOLED ekran va professional kamera.","photo-1511707171634-5f897ff02aa9"],
+["Xiaomi 14T Pro 512GB","Xiaomi",8999000,"flagship","Leica kamerasi, tezkor quvvatlash va AMOLED displey.","photo-1560677653-a263662b153b"],
+["Apple iPhone 15 128GB","Apple",9999000,"flagship","Dynamic Island, 48 MP kamera va USB-C.","photo-1603891128711-11b4b03bb138"],
+["Samsung Galaxy A55 256GB","Samsung",5499000,"budget","Super AMOLED ekran va katta batareya.","photo-1702451462735-3f0ba7679641"],
+["Xiaomi Redmi Note 14 Pro 256GB","Xiaomi",4299000,"budget","Aniq kamera va kundalik ishlar uchun tezkor tizim.","photo-1629494893504-d41e26a02631"],
+["Google Pixel 9 128GB","Google",10499000,"flagship","Google AI va tabiiy ranglardagi suratlar.","photo-1511707171634-5f897ff02aa9"],
+["Apple iPhone 13 128GB","Apple",6999000,"budget","Barqaror ishlash va sifatli kamera.","photo-1603891128711-11b4b03bb138"]];
+async function main(){await connectDB();let seller=await User.findOne({email:"catalog@telefon.market"});if(!seller){const randomPassword=crypto.randomBytes(32).toString("hex");seller=await User.create({email:"catalog@telefon.market",passwordHash:await bcrypt.hash(randomPassword,12),role:"user"});}for(const [name,brand,price,category,description,photo] of catalog){await Product.updateOne({name},{$setOnInsert:{name,brand,price,category,description,image:"https://images.unsplash.com/"+photo+"?auto=format&fit=crop&w=900&q=85",createdBy:seller._id}},{upsert:true});}console.log("Catalog ready: "+catalog.length+" phone listings");await mongoose.disconnect();}main().catch(async error=>{console.error("Catalog setup failed:",error.message);await mongoose.disconnect().catch(()=>{});process.exitCode=1;});
